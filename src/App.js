@@ -1,25 +1,42 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import { addTask } from './redux/task.action';
+import { connect } from 'react-redux';
+import InputField from './components/inputfield/inputfield.component';
+import CustomButton from './components/custombutton/custombutton.component';
+import TaskCards from './components/taskcards/taskcards.component' 
 
-function App() {
+const App=({addTask})=>{
+  const [task, setTask]= useState("");
+
+  const handleInput = event => {
+    setTask(event.target.value)
+  }
+
+  const handleSubmit = ()=>{
+    addTask(task);
+    setTask("");
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="todo">
+        <InputField
+          type={"text"}
+          value={task}
+          placeholder={"Add a task"}
+          handleChange={handleInput}
+        />
+        <CustomButton
+          handleSubmit={handleSubmit}>ADD</CustomButton>
+      </div>
+      <TaskCards />
     </div>
   );
 }
 
-export default App;
+const mapDispatchToProps = (dispatch)=>({
+  addTask : (task)=>dispatch(addTask(task)),
+})
+
+export default connect(null, mapDispatchToProps)(App);
